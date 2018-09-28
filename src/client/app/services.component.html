@@ -1,6 +1,8 @@
 <div>
   <ul class="services">
-    <li *ngFor="let service of services" (click)="onSelect(service)" [class.selected]="service === selectedService">
+    <li *ngFor="let service of services" (click)="onSelect(service)" 
+		[ngClass]="{'AVAILABLE': 'available', 'ERROR': 'error', 'UNAVAILABLE': 'unavailable'}[service.status]">
+		<!--[class.selected]="service === selectedService"-->
       <button class="delete-button" (click)="deleteService(service)">Delete</button>
       <div class="service-element">
         <div class="badge">{{service.environment}}</div>
@@ -15,9 +17,15 @@
       <div class="editfields">
         <div>
           <label>url: </label>
-          <input [(ngModel)]="selectedService.url" placeholder="url" *ngIf="addingService" />
+          <input [(ngModel)]="selectedService.url" placeholder="url" />
+          <!--
+		  <input [(ngModel)]="selectedService.url" placeholder="url" *ngIf="addingService" />
           <label *ngIf="!addingService" class="value">{{selectedService.url}}</label>
+		  -->
         </div>
+		<div>
+		  <label>key: </label>
+		  <input [(ngModel)]="selectedService.key" type="password" />
         <div>
           <label>name: </label>
           <input [(ngModel)]="selectedService.name" placeholder="name" />

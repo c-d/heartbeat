@@ -11,11 +11,11 @@ router.post('/service', (req, res) => {
   serviceService.postService(req, res);
 });
 
-router.put('/service/:url', (req, res) => {
+router.put('/service/:id', (req, res) => {
   serviceService.putService(req, res);
 });
 
-router.delete('/service/:url', (req, res) => {
+router.delete('/service/:id', (req, res) => {
   serviceService.deleteService(req, res);
 });
 

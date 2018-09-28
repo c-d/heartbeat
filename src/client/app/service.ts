@@ -1,8 +1,8 @@
 export class Service {
-  id: number;
+  _id: string;
   name: string;
-  saying: string;
   url: string;
+  key: string;
   environment: string;
   status: string;
 }

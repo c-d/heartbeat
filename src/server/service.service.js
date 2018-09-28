@@ -1,5 +1,6 @@
 const Service = require('./service.model');
 const ReadPreference = require('mongodb').ReadPreference;
+const Request = require('request');
 
 require('./mongo').connect();
 
@@ -17,27 +18,34 @@ function getServices(req, res) {
 }
 
 function postService(req, res) {
-  const originalService = { id: req.body.url, url: req.body.url, name: req.body.name, environment: req.body.environment, status: "Unknown" };
+  const originalService = { url: req.body.url, name: req.body.name, environment: req.body.environment, status: "UNCHECKED", key: req.body.key };
   const service = new Service(originalService);
   service.save(error => {
     if (checkServerError(res, error)) return;
     res.status(201).json(service);
-    console.log('Service created successfully!');
+    console.log('Service created successfully with id ' + service._id + '!');
   });
+  updateEndpointStatus(service);
 }
 
 function putService(req, res) {
   const originalService = {
-    url: req.params.url,
+	_id: req.params.id,
+    url: req.body.url,
     name: req.body.name,
-    environment: req.body.environment
+    environment: req.body.environment,
+	key: req.body.key
   };
-  Service.findOne({ url: originalService.url }, (error, service) => {
+  Service.findOne({ _id: originalService._id }, (error, service) => {
     if (checkServerError(res, error)) return;
     if (!checkFound(res, service)) return;
 
     service.name = originalService.name;
+    service.url = originalService.url;
     service.environment = originalService.environment;
+	if (originalService.key) service.key = originalService.key;
+	
+	updateEndpointStatus(service);
     service.save(error => {
       if (checkServerError(res, error)) return;
       res.status(200).json(service);
@@ -47,8 +55,8 @@ function putService(req, res) {
 }
 
 function deleteService(req, res) {
-  const url = req.params.url;
-  Service.findOneAndRemove({ url: url })
+  const id = req.params._id;
+  Service.findOneAndRemove({ _id: id })
     .then(service => {
       if (!checkFound(res, service)) return;
       res.status(200).json(service);
@@ -72,6 +80,36 @@ function checkFound(res, service) {
     return;
   }
   return service;
+}
+
+function updateEndpointStatus(service) {
+	console.log('Updating endpoint status for', service.url);
+	var options = {
+		url: service.url,
+		headers: {
+			'Ocp-Apim-Subscription-Key': ''
+		},
+		strictSSL: false
+	};
+	Request.get(options, 
+		function(error, response, body) {
+			var status = '';
+		    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+			if (error) {
+				console.log('error:', error); // Print the error if one occurred
+				service.status = "ERROR";
+			}
+			else {
+				if (response.statusCode == 200 || response.statusCode == 201) {
+					service.status = "AVAILABLE";
+				}
+				else service.status = "UNAVAILABLE";
+			}
+			service.save();
+			console.log('Updated service status to ', service.status);
+		}
+	);
+
 }
 
 module.exports = {

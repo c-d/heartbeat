@@ -14,7 +14,7 @@ export class ServiceService {
   }
 
   deleteService(service: Service) {
-    return this.http.delete(`${api}/service/${service.url}`);
+    return this.http.delete(`${api}/service/${service._id}`);
   }
 
   addService(service: Service) {
@@ -22,6 +22,6 @@ export class ServiceService {
   }
 
   updateService(service: Service) {
-    return this.http.put<Service>(`${api}/service/${service.url}`, service);
+    return this.http.put<Service>(`${api}/service/${service._id}`, service);
   }
 }

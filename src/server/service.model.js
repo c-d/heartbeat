@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const serviceSchema = new Schema(
   {
-	id: {type: String, required: true, unique: true },
-	url: {type: String, required: true, unique: true },
+	url: {type: String, required: true },
     name: String,
     saying: String,
 	environment: String,
-	status: String
+	status: String,
+	key: {type: String, select: false}
   },
   {
     collection: 'services',
