@@ -90,7 +90,6 @@ function checkFound(res, service) {
 }
 
 function updateEndpointStatus(service) {
-	console.log('Updating endpoint status for', service.url);
 	var options = {
 		url: service.url,
 		headers: {
@@ -103,7 +102,7 @@ function updateEndpointStatus(service) {
 			var status = '';
 		    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
 			if (error) {
-				console.log('error:', error); // Print the error if one occurred
+				console.log('error:'); // Print the error if one occurred
 				service.detail = error;
 				service.status = "ERROR";
 			}
@@ -118,11 +117,21 @@ function updateEndpointStatus(service) {
 				}
 			}
 			service.save();
-			console.log('Updated service status to ', service.status);
+			console.log('Updated',service.url,'status to', service.status);
 		}
 	);
 
 }
+
+function checkServiceAvailability() {
+  Service.find({}, function(err, services) {
+	services.forEach(function(service) {
+	  updateEndpointStatus(service);
+    });
+  })
+}
+
+setInterval(checkServiceAvailability, 10000);
 
 module.exports = {
   getServices,
