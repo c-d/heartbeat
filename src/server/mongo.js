@@ -8,7 +8,8 @@ mongoose.Promise = global.Promise;
 const env = require('./env/environment');
 
 // eslint-disable-next-line max-len
-const mongoUri = `mongodb://${env.dbName}:${env.key}@${env.dbName}.documents.azure.com:${env.cosmosPort}/?ssl=true`; //&replicaSet=globaldb`;
+//const mongoUri = `mongodb://${env.dbName}:${env.key}@${env.dbName}.documents.azure.com:${env.cosmosPort}/?ssl=true`; //&replicaSet=globaldb`;
+const mongoUri = `mongodb://${env.dbName}:${env.key}@${env.dbName}:10255/admin?ssl=true`; //&replicaSet=globaldb`;
 
 function connect() {
  mongoose.set('debug', true);
