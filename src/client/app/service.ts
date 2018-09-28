@@ -5,4 +5,5 @@ export class Service {
   key: string;
   environment: string;
   status: string;
+  detail: string;
 }

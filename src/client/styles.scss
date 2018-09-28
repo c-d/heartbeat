@@ -31,8 +31,7 @@ button {
   }
   &.delete-button {
     float: right;
-    background-color: gray !important;
-    background-color: rgb(216, 59, 1) !important;
+    background-color: #dc3545;
     color: white;
     padding: 4px;
     position: relative;
@@ -75,12 +74,24 @@ div {
       /*background-color: #BBD8DC !important;*/
       color: white;
     }
+	&.available {
+		color: #fff;
+		background-color: #28a745;
+	}
+	&.error {
+		color: #212529;
+		background-color: #ffc107;
+	}
+	&.unavailable {
+		color: #fff;
+		background-color: #dc3545;
+	}
   }
   .text {
     position: relative;
     top: -3px;
   }
-  .saying {
+  .status {
     margin: 5px 0;
   }
   .name {
@@ -115,7 +126,6 @@ div {
 
 label {
   display: inline-block;
-  width: 6em;
   margin: .5em 0;
   color: #888;
   &.value {

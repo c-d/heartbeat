@@ -18,7 +18,14 @@ function getServices(req, res) {
 }
 
 function postService(req, res) {
-  const originalService = { url: req.body.url, name: req.body.name, environment: req.body.environment, status: "UNCHECKED", key: req.body.key };
+  const originalService = { 
+	url: req.body.url, 
+	name: req.body.name, 
+	environment: req.body.environment, 
+	status: "UNCHECKED", 
+	key: req.body.key, 
+	detail: "Service has not been called yet."
+  };
   const service = new Service(originalService);
   service.save(error => {
     if (checkServerError(res, error)) return;
@@ -97,13 +104,18 @@ function updateEndpointStatus(service) {
 		    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
 			if (error) {
 				console.log('error:', error); // Print the error if one occurred
+				service.detail = error;
 				service.status = "ERROR";
 			}
 			else {
 				if (response.statusCode == 200 || response.statusCode == 201) {
 					service.status = "AVAILABLE";
+					service.detail = "Received response status " + response.statusCode;
 				}
-				else service.status = "UNAVAILABLE";
+				else {
+					service.status = "UNAVAILABLE";
+					service.detail = "Received response status " + response.statusCode + ". Body was: " + body;
+				}
 			}
 			service.save();
 			console.log('Updated service status to ', service.status);

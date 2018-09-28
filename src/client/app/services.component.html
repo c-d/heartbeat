@@ -3,41 +3,53 @@
     <li *ngFor="let service of services" (click)="onSelect(service)" 
 		[ngClass]="{'AVAILABLE': 'available', 'ERROR': 'error', 'UNAVAILABLE': 'unavailable'}[service.status]">
 		<!--[class.selected]="service === selectedService"-->
+		
       <button class="delete-button" (click)="deleteService(service)">Delete</button>
       <div class="service-element">
         <div class="badge">{{service.environment}}</div>
         <div class="name">{{service.name}}</div>
-        <div class="saying">{{service.status}}</div>
+        <div class="status">{{service.status}}</div>
       </div>
     </li>
   </ul>
   <div class="editarea">
     <button (click)="enableAddMode()">Add New Service</button>
+    <button *ngIf="selectedService" (click)="toggleEditMode(selectedService)">Edit</button>
     <div *ngIf="selectedService">
       <div class="editfields">
         <div>
-          <label>url: </label>
-          <input [(ngModel)]="selectedService.url" placeholder="url" />
-          <!--
-		  <input [(ngModel)]="selectedService.url" placeholder="url" *ngIf="addingService" />
-          <label *ngIf="!addingService" class="value">{{selectedService.url}}</label>
-		  -->
-        </div>
-		<div>
-		  <label>key: </label>
-		  <input [(ngModel)]="selectedService.key" type="password" />
-        <div>
           <label>name: </label>
-          <input [(ngModel)]="selectedService.name" placeholder="name" />
+          <input [(ngModel)]="selectedService.name" placeholder="name" *ngIf="editingService" />
+          <label *ngIf="!editingService" class="value">{{selectedService.name}}</label>
         </div>
         <div>
-          <label>environment: </label>
-          <select [(ngModel)]="selectedService.environment">
-			<option value="FNTA">FNTA</option>
-			<option value="FNTE">FNTE</option>
-			<option value="FNTY">FNTY</option>
-		  </select>
+          <label>url: </label>
+          <input [(ngModel)]="selectedService.url" placeholder="url" *ngIf="editingService"/>
+          <label *ngIf="!editingService" class="value">{{selectedService.url}}</label>
         </div>
+        <div *ngIf="!editingService">
+          <label>status: </label>
+          <label class="value">{{selectedService.status}}</label>
+        </div>		
+        <div *ngIf="!editingService">
+          <label>detail: </label>
+          <label class="value">{{selectedService.detail}}</label>
+        </div>
+		<div *ngIf="editingService">
+			<div>
+			  <label>key: </label>
+			  <input [(ngModel)]="selectedService.key" type="password" *ngIf="editingService" />
+			  <label *ngIf="!editingService" class="value">*******</label>
+			<div>
+			  <label>environment: </label>
+			  <select [(ngModel)]="selectedService.environment" *ngIf="editingService" >
+				<option value="FNTA">FNTA</option>
+				<option value="FNTE">FNTE</option>
+				<option value="FNTY">FNTY</option>
+			  </select>		  
+			  <label *ngIf="!editingService" class="value">{{selectedService.environment}}</label>
+			</div>
+		</div>
       </div>
       <button (click)="cancel()">Cancel</button>
       <button (click)="save()">Save</button>

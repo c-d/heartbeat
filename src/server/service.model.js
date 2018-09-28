@@ -9,7 +9,8 @@ const serviceSchema = new Schema(
     saying: String,
 	environment: String,
 	status: String,
-	key: {type: String, select: false}
+	key: {type: String, select: false},
+	detail: String
   },
   {
     collection: 'services',

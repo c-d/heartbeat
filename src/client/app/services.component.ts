@@ -9,6 +9,7 @@ import { ServiceService } from './service.service';
 })
 export class ServicesComponent implements OnInit {
   addingService = false;
+  editingService = false;
   services: any = [];
   selectedService: Service;
 
@@ -20,6 +21,7 @@ export class ServicesComponent implements OnInit {
 
   cancel() {
     this.addingService = false;
+	this.editingService = false;
     this.selectedService = null;
   }
 
@@ -40,11 +42,18 @@ export class ServicesComponent implements OnInit {
 
   enableAddMode() {
     this.addingService = true;
+	this.editingService = true;
     this.selectedService = new Service();
+  }
+  
+  toggleEditMode(service: Service) {
+	this.selectedService = service;
+	this.editingService = !this.editingService;
   }
 
   onSelect(service: Service) {
     this.addingService = false;
+	this.editingService = false;
     this.selectedService = service;
   }
 
